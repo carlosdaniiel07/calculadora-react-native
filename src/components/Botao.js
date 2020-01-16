@@ -13,13 +13,33 @@ const Style = StyleSheet.create({
         borderWidth: 1,
         borderColor: '#454545',
         color: '#fff'
+    },
+    operationButton: {
+        backgroundColor: '#6c6b6b',
+        borderColor: '#6c6b6b'
+    },
+    aquaButton: {
+        backgroundColor: '#2eeabb',
+        borderColor: '#2eeabb'
     }
 })
 
 export default (props) => {
+    let buttonStyles = []
+
+    buttonStyles.push(Style.button)
+
+    if (props.operationButton) {
+        buttonStyles.push(Style.operationButton)
+    }
+
+    if (props.aquaButton) {
+        buttonStyles.push(Style.aquaButton)
+    }
+
     return (
-        <TouchableHighlight onPress={props.onPress}>
-            <Text style={Style.button}>{props.label}</Text>
+        <TouchableHighlight onPress={() => props.onPress(props.label)}>
+            <Text style={buttonStyles}>{props.label}</Text>
         </TouchableHighlight>
     )
 }
