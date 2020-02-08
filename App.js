@@ -19,15 +19,15 @@ const Style = StyleSheet.create({
 export default class App extends Component {
   
   state = {
-    displayText: 0,
-    operation: null
+    displayText: '0',
+    operation: null,
+    values: []
   }
 
   addValue = (value) => {
-    this.setState({
-      displayText: this.state.displayText == 0 ? value.toString() : this.state.displayText + value.toString(),
-      operation: this.state.operation
-    })
+    const newDisplayText = this.state.displayText === '0' ? value : this.state.displayText + value
+
+    this.buildState(newDisplayText, this.state.operation, this.state.values)
   }
 
   addDecimal = () => {
@@ -35,16 +35,44 @@ export default class App extends Component {
   }
 
   clearDisplay = () => {
-    this.setState({
-      displayText: 0,
-      operation: this.state.operation
-    })
+    this.buildState('0', null, [])
   }
 
   setOperation = (operation) => {
+    let newValues = this.state.values
+    newValues.push(parseInt(this.state.displayText))
+
+    this.buildState('0', operation, newValues)
+  }
+
+  execCalc = () => {
+    let values = this.state.values
+    let newDisplayText = ''
+
+    values.push(parseInt(this.state.displayText))
+
+    switch(this.state.operation) {
+      case '+':
+        newDisplayText = values.reduce((a, b) => a + b).toString()
+        break
+      case '-':
+        newDisplayText = values.reduce((a, b) => a - b).toString()
+        break
+      case 'x':
+        newDisplayText = values.reduce((a, b) => a * b).toString()
+        break
+      default:
+        // ...
+    }
+
+    this.buildState(newDisplayText, null, [])
+  }
+
+  buildState = (displayText, operation, values) => {
     this.setState({
-      displayText: this.state.displayText,
-      operation: operation
+      displayText,
+      operation,
+      values
     })
   }
   
@@ -76,7 +104,7 @@ export default class App extends Component {
         <View style={Style.buttons}>
           <Botao label='.' onPress={this.addDecimal} />
           <Botao label='0' onPress={this.addValue} />
-          <Botao label='=' onPress={() => this.setOperation('=')} />
+          <Botao label='=' onPress={() => this.execCalc()} />
           <Botao label='+' onPress={() => this.setOperation('+')} operationButton={true} />
         </View>
       </View>
