@@ -19,37 +19,39 @@ const Style = StyleSheet.create({
 export default class App extends Component {
   
   state = {
-    displayText: '0',
+    displayText: '',
     operation: null,
     values: []
   }
 
   addValue = (value) => {
-    const newDisplayText = this.state.displayText === '0' ? value : this.state.displayText + value
-
+    const newDisplayText = this.state.displayText === '' ? value : this.state.displayText + value
     this.buildState(newDisplayText, this.state.operation, this.state.values)
   }
 
   addDecimal = () => {
-    
+    if (!this.state.displayText.includes(',') && this.state.displayText !== '') {
+      this.addValue(',')
+    }
   }
 
   clearDisplay = () => {
-    this.buildState('0', null, [])
+    this.buildState('', null, [])
   }
 
   setOperation = (operation) => {
     let newValues = this.state.values
-    newValues.push(parseInt(this.state.displayText))
 
-    this.buildState('0', operation, newValues)
+    newValues.push(parseFloat(this.state.displayText.replace(',', '.')))
+
+    this.buildState('', operation, newValues)
   }
 
   execCalc = () => {
     let values = this.state.values
     let newDisplayText = ''
 
-    values.push(parseInt(this.state.displayText))
+    values.push(parseFloat(this.state.displayText.replace(',', '.')))
 
     switch(this.state.operation) {
       case '+':
