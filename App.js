@@ -24,8 +24,12 @@ export default class App extends Component {
     values: []
   }
 
+  /**
+   * Adiciona um valor no display da calculadora
+   */
   addValue = (value) => {
-    const newDisplayText = this.state.displayText === '' ? value : this.state.displayText + value
+    let newDisplayText = this.state.displayText === '' ? value : this.state.displayText + value
+
     this.buildState(newDisplayText, this.state.operation, this.state.values)
   }
 
@@ -35,10 +39,16 @@ export default class App extends Component {
     }
   }
 
+  /**
+   * Limpa display da calculadora
+   */
   clearDisplay = () => {
     this.buildState('', null, [])
   }
 
+  /**
+   * Seta a operação a ser realizada
+   */
   setOperation = (operation) => {
     let newValues = this.state.values
 
@@ -47,6 +57,9 @@ export default class App extends Component {
     this.buildState('', operation, newValues)
   }
 
+  /**
+   * Executa o cálculo
+   */
   execCalc = () => {
     let values = this.state.values
     let newDisplayText = ''
@@ -55,21 +68,26 @@ export default class App extends Component {
 
     switch(this.state.operation) {
       case '+':
-        newDisplayText = values.reduce((a, b) => a + b).toString()
+        newDisplayText = values.reduce((a, b) => a + b).toFixed(2).toString()
         break
       case '-':
-        newDisplayText = values.reduce((a, b) => a - b).toString()
+        newDisplayText = values.reduce((a, b) => a - b).toFixed(2).toString()
         break
       case 'x':
-        newDisplayText = values.reduce((a, b) => a * b).toString()
+        newDisplayText = values.reduce((a, b) => a * b).toFixed(2).toString()
         break
       default:
         // ...
     }
 
+    newDisplayText = newDisplayText.replace('.', ',')
+
     this.buildState(newDisplayText, null, [])
   }
 
+  /**
+   * Função customizada p/ atualizar estado do componente
+   */
   buildState = (displayText, operation, values) => {
     this.setState({
       displayText,
